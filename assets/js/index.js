@@ -2,7 +2,7 @@
 
 // Create a class
 
-const colorNames = {
+const colourNames = {
     "#09f": "Blue",
     "#9f0": "Green",
     "#f90": "Orange",
@@ -11,62 +11,69 @@ const colorNames = {
 };
 
 class Shape {
+    #colour;
+    #name;
+
     constructor(colour, name) {
-        this._colour = colour;
-        this._name = name;
+        this.#colour = colourNames[colour];
+        this.#name = name;
     }
 
     get name() {
-        return this._name;
+        return this.#name;
     }
 
     set name(value) {
-        this._name = value;
+        this.#name = value;
     }
 
     get colour() {
-        return this._colour;
+        return this.#colour;
     }
 
     set colour(value) {
-        this._colour = value;
+        this.#colour = value;
     }
 
     getInfo() {
-        const colorName = colorNames[this._colour]; 
-        return `${colorName} ${this._name}`; 
+        return `${this.colour} ${this.name}`; 
     }
 }
 
 // Create shape
 
 const createButton = document.querySelector('.create');
-const storageBoxOne = document.querySelector('.storage-one');
-const storageBoxTwo = document.querySelector('.storage-two');
-const storageBoxThree = document.querySelector('.storage-three');
-const storageBoxFour = document.querySelector('.storage-four');
+const storageBox = document.querySelector('.big-box');
 const infoOfShape = document.querySelector('.information');
+const errorMessage = document.querySelector('.error');
 const shapesArray = [];
 
+function limitedShapes() {
+    if (shapesArray.length >= 24) {
+        errorMessage.innerText = 'Storage is full!'
+        return false; 
+    } else {
+        errorMessage.innerText = '';
+        return true;
+    }
+}
+
+function validateInputInfo(colour, shapeType) {
+    if (shapeType === '' || colour === '') {
+        errorMessage.innerText = 'Please choose a shape and a colour!';
+        return false;
+    } else {
+        errorMessage.innerText = '';
+        return true;
+    }
+}
 
 function createShape() {
     const shapeType = document.querySelector('.shape-select').value;
     const colour = document.querySelector('.colour-select').value;
-    const colourName = colorNames[colour]; 
 
-    if (shapesArray.length >= 24) {
-        infoOfShape.innerText = 'Storage is full!'
-        return; 
-    } else {
-        infoOfShape.innerText = '';
-    }
-
-    if (shapeType === '' || colour === '') {
-        infoOfShape.innerText = 'Please choose a shape and a colour!';
-        return;
-    } else {
-        infoOfShape.innerText = '';
-    }
+    if(!limitedShapes()) return;
+    if(!validateInputInfo(shapeType, colour)) return;
 
     const shape = new Shape(colour, shapeType);
     shapesArray.push(shape);
@@ -79,11 +86,7 @@ function createShape() {
         infoOfShape.innerText = `Unit ${shapesArray.indexOf(shape) + 1}: ${shape.getInfo()}`;
     });
 
-    if (shapesArray.indexOf(shape) < 6)  return storageBoxOne.appendChild(shapeDiv);
-    if (shapesArray.indexOf(shape) < 12) return storageBoxTwo.appendChild(shapeDiv);
-    if (shapesArray.indexOf(shape) < 18) return storageBoxThree.appendChild(shapeDiv);
-    
-    return storageBoxFour.appendChild(shapeDiv);    
+    storageBox.appendChild(shapeDiv);    
 }
 
 createButton.addEventListener('click', createShape);
