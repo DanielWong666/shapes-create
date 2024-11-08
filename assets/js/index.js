@@ -68,6 +68,10 @@ function validateInputInfo(colour, shapeType) {
     }
 }
 
+function shapeInfo(shape) {
+    infoOfShape.innerText = `Unit ${shapesArray.indexOf(shape) + 1}: ${shape.getInfo()}`;
+}
+
 function createShape() {
     const shapeType = document.querySelector('.shape-select').value;
     const colour = document.querySelector('.colour-select').value;
@@ -82,8 +86,8 @@ function createShape() {
     shapeDiv.classList.add('shape', shapeType);
     shapeDiv.style.backgroundColor = colour;
 
-    shapeDiv.addEventListener('click', () => {
-        infoOfShape.innerText = `Unit ${shapesArray.indexOf(shape) + 1}: ${shape.getInfo()}`;
+    shapeDiv.addEventListener('click', function () {
+        shapeInfo(shape);
     });
 
     storageBox.appendChild(shapeDiv);    
